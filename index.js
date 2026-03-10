@@ -43,26 +43,44 @@ app.post('/jokes', (req, res) => {
 
 
 //5. PUT a joke
-app.put('/jokes/:id', (req,res) =>{
+app.put('/jokes/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const jokeToPut = {
-      id: id,
-      jokeText: req.body.text,
-      jokeType: req.body.type,
-    }
-  const index = jokes.findIndex((joke) => {return joke.id === id});
+    id: id,
+    jokeText: req.body.text,
+    jokeType: req.body.type,
+  }
+  const index = jokes.findIndex((joke) => { return joke.id === id });
   jokes[index] = jokeToPut;
   res.json(jokeToPut);
 });
+
+
 //6. PATCH a joke
-app.patch('/jokes/:id', (req,res) => {
+app.patch('/jokes/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  let jokeToPatch = jokes.find((joke) => {return joke.id === id})
+  let jokeToPatch = jokes.find((joke) => { return joke.id === id })
   jokeToPatch.jokeText = req.body.text || jokeToPatch.jokeText
   jokeToPatch.jokeType = req.body.type || jokeToPatch.jokeType
   res.json(jokeToPatch);
-})
+});
+
+
 //7. DELETE Specific joke
+
+app.delete('/jokes/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = jokes.findIndex((joke) => { return joke.id === id });
+  if (index > -1) {
+    jokes.splice(index, 1);
+    res.sendStatus(200);
+  }
+  else {
+    res
+      .status(400)
+      .json({ error: `Joke with id ${id} not found, no jokes were deleted.` });
+  }
+});
 
 //8. DELETE All jokes
 
